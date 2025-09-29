@@ -1,60 +1,63 @@
 import random
+import nltk
+nltk.download('words')
+from nltk.corpus import words
 
-List_of_words = ["apple", "banana"]
+WORDS = words.words()
 
+def choose_word():
+    return list(random.choice(WORDS))
 
-def word_choice():
-    word = random.choice(List_of_words)
-    split_word = list(word)
-    return split_word
+def get_try_count(word):
+    return len(word) + 6
 
+def create_underscore(word):
+    return ["_" for _ in word]
 
-def try_count():
-    a = len(word_choice()) + 2
-    return a
-
-
-def word_convertor():
-    chopped_word = word_choice()
-    y = []
-    for i in chopped_word:
-        y.append("_")
-    return y, chopped_word
-
-
-def letter_checker(i):
-    n = 0
-    a, b = word_convertor()
-    if i in b:
-        for d in b:
-            if i == d:
-                i.replace(d, i)
-                print("correct guess!")
+def check_letter(guess, word, display):
+    if len(guess) != 1:
+        print("You can only guess one letter at a time")
+        print("You lose a try")
+        return True
+    elif guess in word:
+        for idx, letter in enumerate(word):
+            if letter == guess:
+                display[idx] = guess
+        print("Correct guess!")
+        print(display)
+        return False
     else:
-        print("nah you wrong")
-        n += 1
-    return a, b, i
-
+        print("Wrong guess!")
+        print(display)
+        print("You lose a try")
+        return True
 
 def main():
-    n = 0
-    while n < 1:
-        m = 0
-        tries = try_count()
-        underscore, word = word_convertor()
+    print("Game: Hangman")
+    word = choose_word()
+    tries = get_try_count(word)
+    display = create_underscore(word)
 
-        print("Game: Hangman")
-        input("Press Enter to start")
-        print("The word has " + str(len(underscore)) + " letters")
-        print(underscore)
-        while m < 1:
-            c = 0
-            if c < tries:
-                print("You have", tries, "tries")
-                guess = input("Guess a letter: ")
-                a, b, c = letter_checker(guess)
-                print(c)
+    input("Press Enter to start")
+    print(f"The word has {len(display)} letters")
+    print(display)
 
+    while True:
+        if "_" in display:
+            if tries > 0:
+                guess = input("Guess a letter: ").lower()
+                should_decrement = check_letter(guess, word, display)
+                if should_decrement:
+                    tries -= 1
+                print(f"You have {tries} tries left")
+            else:
+                print("You lose!")
+                print(f"The word was: {''.join(word)}")
+                break
+        else:
+            print("You win!")
+            print(f"The word was: {''.join(word)}")
+            break
 
 
 main()
