@@ -2,6 +2,27 @@ import matplotlib.pyplot as plt
 import csv as csv
 import uuid as uuid
 import pandas as pd
+import dateutil as date
+
+
+def chart_report():
+    x = []
+    y = []
+    with open('expense.csv','r') as csvfile:
+        lines = csv.reader(csvfile, delimiter=',')
+        next(lines)
+        for row in lines:
+            x.append(row[2])
+            y.append(int(row[1]))
+    plt.plot(x, y, color = "black", linestyle="solid", marker="o")
+    plt.xticks(rotation = 25)
+    plt.xlabel('Dates')
+    plt.ylabel('Expense(euros)')
+    plt.title('Expense Report', fontsize = 20)
+    plt.grid()
+    plt.legend("")
+    plt.show()
+    
 
 
 def remove_data_by_date(date):
@@ -11,11 +32,12 @@ def remove_data_by_date(date):
     df.to_csv("expense.csv", index=False)
     print("Sucessfully deleted.")
 
-def date_conversion_to_days(date):
-    separate_date = date.split("/")
-    year, month, day = separate_date
-    converted_date = int(year) * 365 + int(month) * 30 + int(day)
-    return converted_date
+
+def remove_data_by_ID(ID):
+    df = pd.read_csv("expense.csv")
+    df = df[~df.apply(lambda row: row.astype(str).str.contains(ID, case=False)).any(axis=1)]
+    df.to_csv("expense.csv", index=False)
+    print("Sucessfully deleted.")
 
 
 def uuid_generator():
@@ -30,7 +52,8 @@ def csv_value_writer(a):
 
 
 def check_input():
-    i = input("Add expense? or Show report? or Delete expense or Exit?: ")
+    i = input("""
+Add expense? or Show report? or Delete expense or Exit?: """)
     try:
         if i == "Add expense":
             return 1
@@ -48,7 +71,7 @@ def check_input():
 
 
 def check_input_delete():
-    i = input('Do you want to delete data by "Date" or "ID" or do you want to "Return"?: ')
+    i = input('''Do you want to delete data by "Date" or "ID" or do you want to "Return"?: ''')
     try:
         if i == "Date":
             return 1
@@ -75,23 +98,27 @@ def main():
             expense_amount = input("How much was the expense?(in euros): ")
             expense_date = input("When was it done?(year/month/day): ")
 
-            converted_date = date_conversion_to_days(expense_date)
             expense_id = uuid_generator()
 
-            combined_expense_data = (expense_catagory, expense_amount, converted_date, expense_id)
+            combined_expense_data = (expense_catagory, expense_amount, expense_date, expense_id)
             csv_value_writer(combined_expense_data)
 
         elif i == 2:
-            return
+            chart_report()
         
         elif i == 3:
             j = check_input_delete()
 
             if j == 1:
                 get_input_date = input("What date?(Year/Month/Day):")
-                conv_delete_day = date_conversion_to_days(get_input_date)
-                remove_data_by_date(conv_delete_day)
+                remove_data_by_date(get_input_date)
 
+            elif j == 2:
+                get_input_ID = input("What ID?:")
+                remove_data_by_ID(get_input_ID)
+
+            elif j == 0:
+                continue
 
         elif i == 0:
             print("Exiting program......")
