@@ -2,18 +2,19 @@ import matplotlib.pyplot as plt
 import csv as csv
 import uuid as uuid
 import pandas as pd
-import dateutil as date
 
 
 def chart_report():
     x = []
     y = []
+    z = []
     with open('expense.csv','r') as csvfile:
         lines = csv.reader(csvfile, delimiter=',')
         next(lines)
         for row in lines:
             x.append(row[2])
             y.append(int(row[1]))
+            z.append(row[0])
     plt.plot(x, y, color = "black", linestyle="solid", marker="o")
     plt.xticks(rotation = 25)
     plt.xlabel('Dates')
@@ -71,7 +72,7 @@ Add expense? or Show report? or Delete expense or Exit?: """)
 
 
 def check_input_delete():
-    i = input('''Do you want to delete data by "Date" or "ID" or do you want to "Return"?: ''')
+    i = input('Do you want to delete data by "Date" or "ID" or do you want to "Return"?: ')
     try:
         if i == "Date":
             return 1
