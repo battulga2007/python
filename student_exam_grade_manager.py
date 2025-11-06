@@ -2,10 +2,24 @@ import pandas as pd
 import csv as csv
 import hashlib as hl
 
+def getLessonReport(i):
+    df = pd.read_csv("student_info.csv")
+    x = df.loc[df['Subject'] == str(i)]
+    print(x)
+    
 
-def bare_bone_part_of_adding_info_to_the_csv_file_i_think_but_i_do_not_know_so_plz_help(j, k):
+    
+
+
+def getStudentReport(i):
+    x = pd.read_csv("student_info.csv")
+    y = x.loc[x['Name'] == str(i)]
+    print(y)
+
+def addStudentinfo(j, k):
     while True:
         i = input("Do you want to continue or exit?: ")
+
         try:
             if i == "continue":
                 subject = input("Can you add the subject?: ")
@@ -13,11 +27,14 @@ def bare_bone_part_of_adding_info_to_the_csv_file_i_think_but_i_do_not_know_so_p
                 exam_date = input("Can you add the exam date?: ")
                 combinedData = (j, k, subject, grade, exam_date)
                 add_Info(combinedData)
+
             elif i == "exit":
                 print("Exiting....")
                 return False
+            
             else:
                 print("Invalid Command")
+
         except ValueError:
             print("Invalid input")
 
@@ -48,10 +65,17 @@ def first_input_check(i):
             print("Enter the following information")
             get_Student_ID = input("Add Student ID: ")
             get_Student_Name = input("Add Student Name: ")
-            bare_bone_part_of_adding_info_to_the_csv_file_i_think_but_i_do_not_know_so_plz_help(get_Student_ID, get_Student_Name)
+
+            addStudentinfo(get_Student_ID, get_Student_Name)
 
         elif i == "View":
             get_student_ID_view = input("Enter the student ID: ")
+            getStudentReport(get_student_ID_view)
+
+        elif i == "Show report":
+            get_Lesson = input("Enter the lesson that you want to the report of: ")
+            getLessonReport(get_Lesson)
+
 
         else:
             print("Invalid command")
