@@ -1,14 +1,3 @@
-Student_ID,Name,Subject,Grade,Exam_Date
-2000,shoe,subject1,90,2024/10/9
-2000,shoe,subject2,85,2000/10/29
-2000,shoe,subject1,80,2024/10/9
-2000,shoe,subject1,70,2024/10/9
-2000,shoe,subject1,60,2024/10/9
-2000,shoe,subject1,50,2024/10/9
-2000,shoe,subject1,40,2024/10/9
-2000,shoe,subject1,30,2024/10/9
-2000,shoe,subject1,20,2024/10/9
-2000,shoe,subject1,10,2024/10/9
-2000,shoe,subject1,0,2024/10/9
-2000,shoe,subject1,25,2024/10/9
-2000,shoe,subject1,55,2024/10/9
+Student_ID,Name,Subject,Grade,Exam_Date,ID
+2000,sdfh,subject3,90,2026/5/9,64e9e899-1224-421e-a7c4-ccfa3e123c9e
+3000,ghndlk,subject5,90,2025/9/10,placeholder_ID
