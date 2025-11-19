@@ -1,21 +1,35 @@
 import pandas as pd
 import csv as csv
-import hashlib as hl
 import uuid as uuid
+import matplotlib.pyplot as plt
+
+
+def gradingAssign(i):
+    try:
+        if i >= 90:
+            return "A"
+        elif i >= 80:
+            return "B"
+        elif i >= 70:
+            return "C"
+        elif i >= 60:
+            return "D"
+        elif i < 60:
+            return "F"
+    except ValueError:
+        print("Invalid grade")
 
 
 def deleteExaminfo(i):
-    df = pd.read_csv("student_info.csv")
-
+    df = pd.read_csv("student_info.csv", converters={'Student_ID': str})
     x = df.loc[df['ID'] == str(i)]
     print(x)
 
-    get_input = input("Would you like to continue?(y/n): ")
-
     while True:
+        get_input = input("Would you like to continue?(y/n): ")
         try:
             if get_input == "y":
-                df = df.drop(df[x], inplace=True)
+                df = df.drop(x.index)
                 df.to_csv('student_info.csv', index=False)
                 return False
 
@@ -23,13 +37,16 @@ def deleteExaminfo(i):
                 print("Exiting...")
                 return False
 
-        except ValueError:
-            print("Invalid input")
+            else:
+                print("Invalid input")
 
+        except Exception as e:
+            print(f"Error deleting data: {e}")
+            return False
 
 
 def updateExaminfo(i):
-    df = pd.read_csv("student_info.csv")
+    df = pd.read_csv("student_info.csv",dtype='object', converters={'Student_ID': str})
 
     x = df.loc[df['ID'] == str(i)]
     print(x)
@@ -38,10 +55,10 @@ def updateExaminfo(i):
 
     try:
         if get_input == "y":
-            grade_input = input("Input the grade you want change to: ")
+            grade_input = str(input("Input the grade you want change to: "))
             df.loc[df['ID'].str.contains(i), 'Grade'] = grade_input
-            print(df)
-            df.to_csv('student_info.csv', index=False).astype(str)
+            print(df.loc[df["ID"].str.contains(i)])
+            df.to_csv('student_info.csv', index=False)
 
         elif get_input == "n":
             print("Exiting...")
@@ -51,28 +68,42 @@ def updateExaminfo(i):
 
 
 def getLessonReport(i):
-    df = pd.read_csv("student_info.csv")
+    df = pd.read_csv("student_info.csv", converters={'Student_ID': str})
     x = df.loc[df['Subject'] == str(i)]
     print(x)
-    
+
+    grade_counts = x['Grading'].value_counts().sort_index()
+    grade_counts.plot(kind='bar')
+
+    plt.title(f"Grades for the subject {i}")
+    plt.xlabel("Grade")
+    plt.ylabel("Count")
+    plt.xticks(rotation=0)
+    plt.tight_layout()
+    plt.show()
+
 
 def getStudentReport(i):
-    x = pd.read_csv("student_info.csv")
-    y = x.loc[x['Name'] == str(i)]
+    x = pd.read_csv("student_info.csv", converters={'Student_ID': str})
+    y = x.loc[x['Student_ID'] == str(i)]
     print(y)
+    z = y.loc[:, 'Grade'].mean()
+    print(f"Average of this student's grade is {z}")
 
 
 def addStudentinfo(j, k):
     while True:
+        print("")
         i = input("Do you want to continue or exit?: ")
 
         try:
             if i == "continue":
-                subject = input("Can you add the subject?: ")
-                grade = input("Can you add the grade?: ")
-                exam_date = input("Can you add the exam date?: ")
+                subject = input("Can you add the subject?(str): ")
+                grade = input("Can you add the grade?(int): ")
+                exam_date = input("Can you add the exam date?(yyyy/mm/dd): ")
+                grading = gradingAssign(int(grade))
                 student_id = str(uuid.uuid4())
-                combinedData = (j, k, subject, grade, exam_date, student_id)
+                combinedData = (j, k, subject, grade, grading, exam_date, student_id)
                 add_Info(combinedData)
 
             elif i == "exit":
@@ -86,12 +117,10 @@ def addStudentinfo(j, k):
             print("Invalid input")
 
 
-
 def add_Info(i):
     with open('student_info.csv', "a", newline="") as csvfile:
         value_writer = csv.writer(csvfile, delimiter=",")
         value_writer.writerow(i)
-
 
 
 def first_input_check(i):
@@ -99,7 +128,7 @@ def first_input_check(i):
         if i == "help":
             print("")
             print("Welcome to probably the worst student info managing program ever made on this planet earth.")
-            print("There are few commands you can give")
+            print("There are few commands you can give:")
             print("1) Add : (You can add the record of the student) ")
             print("2) View : (You can view the record of a specified student with their ID) ")
             print("3) Show report : (You can view the lesson grade related reports) ")
@@ -110,7 +139,7 @@ def first_input_check(i):
             
         elif i == "Add":
             print("Enter the following information")
-            get_Student_ID = input("Add Student ID: ")
+            get_Student_ID = str(input("Add Student ID: "))
             get_Student_Name = input("Add Student Name: ")
 
             addStudentinfo(get_Student_ID, get_Student_Name)
@@ -125,12 +154,15 @@ def first_input_check(i):
 
         elif i == "Update":
             get_student_update = input("Add ID to update: ")
-            
             updateExaminfo(get_student_update)
 
         elif i == "Delete":
             get_student_delete = input("Add ID to delete: ")
             deleteExaminfo(get_student_delete)
+
+        elif i == "Exit":
+            print("Exiting...")
+            return False
 
         else:
             print("Invalid command")
@@ -138,13 +170,14 @@ def first_input_check(i):
         return NameError
 
 
-
 def main():
     print("Student Info Manager")
     
     while True:
         get_first_input = input("What do you wish to do?(Type 'help' if you are confused): ")
-        first_input_check(get_first_input)
+        i = first_input_check(get_first_input)
+        if i == False:
+            return False
 
 
 
