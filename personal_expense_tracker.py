@@ -11,10 +11,12 @@ def chart_report():
     with open('expense.csv','r') as csvfile:
         lines = csv.reader(csvfile, delimiter=',')
         next(lines)
+
         for row in lines:
             x.append(row[2])
             y.append(int(row[1]))
             z.append(row[0])
+    
     plt.plot(x, y, color = "black", linestyle="solid", marker="o")
     plt.xticks(rotation = 25)
     plt.xlabel('Dates')
