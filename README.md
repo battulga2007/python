@@ -1,1 +1,1 @@
-This is just my python code dump, do not expect anything advanced here!! 
+This is my python code list. I just add things when I lowk wanna do it
