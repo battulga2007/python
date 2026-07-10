@@ -2,21 +2,29 @@ def summ(numbers):
     total = 0
     for i in numbers:
         total += i
-    print("The sum is", total)
 
     return total
 
 def avg(numbers):
     added_up = summ(numbers)
     average = added_up/len(numbers)
-    print("The average is", )
-
-    return average
+    print("The sum is", added_up)
+    print("The average is", average)
 
 def maximum_minimum(numbers):
-    sorted_num = sorted(numbers)
-    print("The maximum is", sorted_num[-1])
-    print("The minimum is", sorted_num[0])
+    sorted_max = 0
+    sorted_min = numbers[0]
+
+    for i in numbers:
+        if i > sorted_max:
+            sorted_max = i
+
+    for i in numbers:
+        if i < sorted_min:
+            sorted_min = i
+
+    print("The maximum is", sorted_max)
+    print("The minimum is", sorted_min)
 
 def count_even_odd(numbers):
     even = 0
@@ -32,8 +40,6 @@ def count_even_odd(numbers):
 
     print("The number of odds are", odd)
     print("The number of evens are", even)
-
-    return odd, even
 
 
 def main():
