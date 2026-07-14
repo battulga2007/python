@@ -45,9 +45,9 @@ def distance_finder(a, b):
 
 def main():
     i = True
-    j = True
 
     while i:
+        j = True
         print("""
     Mongolia Route Planner 0.1v
     ---------------------------
@@ -64,7 +64,7 @@ def main():
         city_depart_number = input("Departing city: ")
         city_arrival_number = input("Arrival city: ")
 
-        if city_arrival_number not in ["1","2","3","4","5","6"] and city_depart_number not in ["1","2","3","4","5","6"] and city_arrival_number != city_depart_number:
+        if city_arrival_number not in ["1","2","3","4","5","6"] or city_depart_number not in ["1","2","3","4","5","6"] and city_arrival_number != city_depart_number:
 
             print("Choose the numbers from 1 to 6.")
         
